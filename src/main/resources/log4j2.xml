@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration status="DEBUG" name="LogChats">
+    <Appenders>
+        <Console name="ConsoleAppender" target="SYSTEM_OUT">
+            <PatternLayout>
+                <ScriptPatternSelector defaultPattern="[%level] %d [%tn] %C %M - %msg%n">
+                    <Script name="LevelSelector" language="javascript"><![CDATA[
+                            result=null;
+                            switch (logEvent.getLevel())
+                            {
+                                case org.apache.logging.log4j.Level.ERROR:
+                                case org.apache.logging.log4j.Level.WARN:result=logEvent.getLevel();
+                                                                         break;
+                                default:result=null;
+                            }
+                            result;
+                            ]]>
+                    </Script>
+                    <PatternMatch key="WARN"
+                                  pattern="%yellow{[%level]} %d [%tn] %C %M - %msg%n"/>
+                    <PatternMatch key="ERROR"
+                                  pattern="%d{yyyy/MM/dd HH:mm:ss.SSS} %red{[%level]} [%tn] %C %l - %msg%n"/>
+                </ScriptPatternSelector>
+            </PatternLayout>
+        </Console>
+        <File name="LogChatsInfo" fileName="C:\Users\esheikin\Desktop\loggs\ChatLogInfo.log">
+            <PatternLayout>
+                <Pattern>[%level] %d [%tn] %C %M - %msg%n</Pattern>
+            </PatternLayout>
+            <Filters>
+                <ThresholdFilter level="WARN" onMatch="DENY" onMismatch="NEUTRAL"/>
+            </Filters>
+        </File>
+        <File name="LogChatsWarn" fileName="C:\Users\esheikin\Desktop\loggs\ChatLogWarn.log">
+            <PatternLayout>
+                <Pattern>[%level] %d [%tn] %C %M - %msg%n</Pattern>
+            </PatternLayout>
+            <Filters>
+                <ThresholdFilter level="ERROR" onMatch="DENY" onMismatch="NEUTRAL"/>
+            </Filters>
+        </File>
+        <File name="LogChatsError" fileName="C:\Users\esheikin\Desktop\loggs\ChatLogError.log">
+            <PatternLayout>
+                <Pattern>%d{yyyy/MM/dd HH:mm:ss.SSS} [%level] [%tn] %C %l - %msg%n</Pattern>
+            </PatternLayout>
+        </File>
+    </Appenders>
+    <Loggers>
+        <Root level="TRACE">
+            <AppenderRef ref="ConsoleAppender"/>
+            <AppenderRef ref="LogChatsInfo" level="INFO"/>
+            <AppenderRef ref="LogChatsWarn" level="WARN"/>
+            <AppenderRef ref="LogChatsError" level="ERROR"/>
+        </Root>
+    </Loggers>
+</configuration>
